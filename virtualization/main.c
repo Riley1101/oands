@@ -1,0 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+
+  printf("Location of the code: %p\n", main);
+  printf("Location of the heap: %p\n", malloc(100e6));
+
+  int x = 3;
+  printf("Location of the stack: %p\n", &x);
+
+  return EXIT_SUCCESS;
+}
