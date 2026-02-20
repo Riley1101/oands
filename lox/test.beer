@@ -1,1 +1,12 @@
-var x = ask Reviewer: "hi";
+agent Coder {
+    model "llama-3.gguf"
+}
+
+agent Rustacean < Coder {
+    resource "docs.rust.lang"
+}
+
+
+var resultExpectation = 10;
+
+print result; 
