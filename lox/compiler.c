@@ -7,13 +7,13 @@ void compile(const char *source) {
   int line = -1;
   for (;;) {
     Token token = scanToken();
-    printf("%2d '%.*s'\n", token.type, token.length, token.start);
     if (token.line != line) {
-      printf("%4d \n", token.line);
+      printf("%4d ", token.line);
       line = token.line;
     } else {
-      printf("    | \n");
+      printf("   | ");
     }
+    printf("%2d '%.*s'\n", token.type, token.length, token.start);
 
     if (token.type == TOKEN_EOF) {
       break;

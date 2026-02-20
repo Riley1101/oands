@@ -10,9 +10,18 @@ VM vm;
 
 static void resetStack() { vm.stackTop = vm.stack; }
 
-void initVM() { resetStack(); }
+void initVM() {
+  vm.chunk = NULL;
+  vm.ip = NULL;
+  resetStack();
+}
 
-void freeVM() { freeChunk(vm.chunk); }
+void freeVM() {
+  if (vm.chunk != NULL) {
+    freeChunk(vm.chunk);
+    vm.chunk = NULL;
+  }
+}
 
 void push(Value value) {
   *vm.stackTop = value;

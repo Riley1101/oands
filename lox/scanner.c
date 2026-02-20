@@ -1,6 +1,5 @@
 #include "scanner.h"
 #include <stdbool.h>
-#include <stdio.h>
 #include <string.h>
 
 typedef struct {
@@ -210,9 +209,10 @@ Token scanToken() {
   case '-':
     return makeToken(TOKEN_MINUS);
   case '/':
-    if (peekNext() == '/') {
+    if (peek() == '/') {
       while (peek() != '\n' && !isAtEnd())
         advance();
+      return scanToken();
     }
     return makeToken(TOKEN_SLASH);
   case '*':
@@ -227,6 +227,10 @@ Token scanToken() {
     return makeToken(match('=') ? TOKEN_LESS_EQUAL : TOKEN_LESS);
   case '"':
     return string();
+  case '\n':
+    scanner.line++;
+    return scanToken();
+  default:
+    return errorToken("Unexpected character.");
   }
-  return makeToken(TOKEN_EOF);
 }
