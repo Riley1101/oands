@@ -29,7 +29,7 @@ static void resetStack();
 void initVM();
 void freeVM();
 
-InterprectResult interpret(Chunk *chunk);
+InterprectResult interpret(const char *source);
 void push(Value value);
 Value pop();
 

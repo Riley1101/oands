@@ -1,5 +1,6 @@
 #include "vm.h"
 #include "chunk.h"
+#include "compiler.h"
 #include "debug.h"
 #include "value.h"
 #include <stdio.h>
@@ -11,7 +12,12 @@ static void resetStack() { vm.stackTop = vm.stack; }
 
 void initVM() { resetStack(); }
 
-void freeVM() { freeChunk(vm.chunk); }
+void freeVM() {
+  if (vm.chunk != NULL) {
+    freeChunk(vm.chunk);
+    vm.chunk = NULL;
+  }
+}
 
 void push(Value value) {
   *vm.stackTop = value;
@@ -70,9 +76,8 @@ static InterprectResult run() {
 #undef READ_CONSTANT
 }
 
-InterprectResult interpret(Chunk *chunk) {
-  vm.chunk = chunk;
-  vm.ip = vm.chunk->code;
-
-  return run();
+InterprectResult interpret(const char *source) {
+  compile(source);
+  /* TODO: compiler will set vm.chunk and we run it */
+  return INTERPRET_OK;
 }
