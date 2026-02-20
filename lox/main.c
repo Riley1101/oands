@@ -1,22 +1,60 @@
-#include "chunk.h"
 #include "vm.h"
+#include <stdio.h>
 #include <stdlib.h>
+
+static void repl() {
+  char line[1024];
+  for (;;) {
+    printf("> ");
+
+    if (!fgets(line, sizeof(line), stdin)) {
+      printf("\n");
+    }
+    interpret(line);
+  }
+}
+
+static char *readFile(char *path) {
+  FILE *file = fopen(path, "rb");
+  fseek(file, 0L, SEEK_END);
+  size_t fileSize = ftell(file);
+  rewind(file);
+  char *buffer = malloc(fileSize + 1);
+  size_t bytesRead = fread(buffer, sizeof(char), fileSize, file);
+
+  if (bytesRead < fileSize) {
+    fprintf(stderr, "Could not read file \"%s\".\n", path);
+    exit(64);
+  }
+
+  buffer[bytesRead] = '\0';
+  fclose(file);
+  return buffer;
+}
+
+static void runFile(char *path) {
+  char *source = readFile(path);
+  InterprectResult result = interpret(source);
+  free(source);
+
+  if (result == INTERPRET_COMPILE_ERROR)
+    exit(65);
+  if (result == INTERPRET_COMPILE_ERROR)
+    exit(70);
+}
 
 int main(int argc, char *argv[]) {
 
   initVM();
 
-  Chunk chunk;
-
-  initChunk(&chunk);
-
-  int constant = addConstant(&chunk, 3.4);
-  writeChunk(&chunk, OP_CONSTANT, 123);
-  writeChunk(&chunk, constant, 123);
-  writeChunk(&chunk, OP_NEGATE, 123);
-  writeChunk(&chunk, OP_RETURN, 123);
-
-  interpret(&chunk);
+  if (argc == 1) {
+    repl();
+  } else if (argc == 2) {
+    runFile(argv[1]);
+  } else {
+    fprintf(stderr, "Usage: clox [path]\n");
+    exit(64);
+  }
 
   freeVM();
 

@@ -4,9 +4,9 @@ CFLAGS = -Wall -Wextra -g -std=c99
 
 TARGET = main
 
-SRCS = main.c chunk.c memory.c debug.c value.c vm.c
+SRCS = main.c chunk.c memory.c debug.c value.c vm.c scanner.c compiler.c
 OBJS = $(SRCS:.c=.o)
-HDRS = chunk.h common.h memory.h debug.h value.h vm.h
+HDRS = chunk.h common.h memory.h debug.h value.h vm.h scanner.h compiler.h
 
 all: $(TARGET)
 

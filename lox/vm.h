@@ -1,6 +1,7 @@
 #ifndef clox_vm_h
 #define clox_vm_h
 
+#include <stdio.h>
 #define STACK_MAX 256
 
 #include "chunk.h"
@@ -25,12 +26,12 @@ typedef enum {
   INTERPRET_RUNTIME_ERROR,
 } InterprectResult;
 
-static void resetStack();
 void initVM();
 void freeVM();
 
-InterprectResult interpret(Chunk *chunk);
+InterprectResult interpret(const char* source);
 void push(Value value);
 Value pop();
+
 
 #endif // !clox_vm_h
