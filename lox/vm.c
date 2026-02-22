@@ -1,7 +1,6 @@
 #include "vm.h"
 #include "chunk.h"
 #include "compiler.h"
-#include "debug.h"
 #include "value.h"
 #include <stdio.h>
 #include <sys/types.h>
@@ -11,9 +10,9 @@ VM vm;
 static void resetStack() { vm.stackTop = vm.stack; }
 
 void initVM() {
+  resetStack();
   vm.chunk = NULL;
   vm.ip = NULL;
-  resetStack();
 }
 
 void freeVM() {
@@ -52,7 +51,7 @@ static InterprectResult run() {
       printf("  ]");
     }
     printf("\n");
-    disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
+    // disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
 #endif /* ifndef DEBUG_TRACING_EXTENSION */
 
     uint8_t instruction;

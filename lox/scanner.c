@@ -110,7 +110,7 @@ static TokenType checkKeyword(int start, int length, const char *rest,
       memcmp(scanner.start + start, rest, length) == 0) {
     return type;
   }
-  return TOKEN_INDENTIFIER;
+  return TOKEN_IDENTIFIER;
 }
 
 static TokenType identifierType() {
@@ -160,7 +160,7 @@ static TokenType identifierType() {
   case 'w':
     return checkKeyword(1, 4, "hile", TOKEN_WHILE);
   }
-  return TOKEN_INDENTIFIER;
+  return TOKEN_IDENTIFIER;
 }
 
 static Token identifier() {

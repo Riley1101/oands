@@ -27,7 +27,7 @@ typedef enum {
   TOKEN_LESS_EQUAL,
   // Literals
 
-  TOKEN_INDENTIFIER,
+  TOKEN_IDENTIFIER,
   TOKEN_STRING,
   TOKEN_NUMBER,
 

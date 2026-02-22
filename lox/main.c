@@ -20,6 +20,10 @@ static char *readFile(char *path) {
   size_t fileSize = ftell(file);
   rewind(file);
   char *buffer = malloc(fileSize + 1);
+  if (buffer == NULL) {
+    fprintf(stderr, "Not enough memory to read \"%s\".\n", path);
+    exit(74);
+  }
   size_t bytesRead = fread(buffer, sizeof(char), fileSize, file);
 
   if (bytesRead < fileSize) {
