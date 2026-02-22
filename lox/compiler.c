@@ -40,6 +40,7 @@ typedef struct {
 } ParseRule;
 
 Parser parser;
+
 Chunk *compilingChunk;
 
 static Chunk *currentChunk() { return compilingChunk; }
@@ -107,7 +108,7 @@ static void endCompiler() {
 
 static void expression();
 static ParseRule *getRule(TokenType type);
-static void parsePrecendence(Precedence precedence);
+static void parsePrecedence(Precedence precedence);
 
 static void grouping() {
   expression();
@@ -145,6 +146,7 @@ static void parsePrecedence(Precedence precedence) {
     infixRule();
   }
 }
+
 static void expression() { parsePrecedence(PREC_ASSIGNMENT); }
 
 static void binary() {
@@ -187,7 +189,6 @@ static void number() {
   emitConstant(value);
 }
 
-
 bool compile(const char *source, Chunk *chunk) {
   initScanner(source);
   compilingChunk = chunk;
@@ -196,6 +197,9 @@ bool compile(const char *source, Chunk *chunk) {
   advance();
   expression();
   consume(TOKEN_EOF, "Expected end of expression.");
+  if (!parser.hadError) {
+    endCompiler();
+  }
   return !parser.hadError;
 }
 
@@ -206,8 +210,8 @@ ParseRule rules[] = {
     [TOKEN_RIGHT_BRACE] = {NULL, NULL, PREC_NONE},
     [TOKEN_COMMA] = {NULL, NULL, PREC_NONE},
     [TOKEN_DOT] = {NULL, NULL, PREC_NONE},
-    [TOKEN_MINUS] = {unary, NULL, PREC_NONE},
-    [TOKEN_PLUS] = {NULL, NULL, PREC_NONE},
+    [TOKEN_MINUS] = {unary, binary, PREC_TERM},
+    [TOKEN_PLUS] = {NULL, binary, PREC_TERM},
     [TOKEN_SEMICOLON] = {NULL, NULL, PREC_NONE},
     [TOKEN_SLASH] = {NULL, binary, PREC_FACTOR},
     [TOKEN_STAR] = {NULL, binary, PREC_FACTOR},

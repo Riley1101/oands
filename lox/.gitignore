@@ -1,0 +1,8 @@
+main.dSYM
+main
+*.o
+*.d
+*.so
+*.a
+*.out
+

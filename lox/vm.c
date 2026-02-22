@@ -86,6 +86,8 @@ static InterprectResult run() {
       printf("\n");
       return INTERPRET_OK;
     }
+    default:
+      return INTERPRET_RUNTIME_ERROR;
     }
   }
 
@@ -105,6 +107,7 @@ InterprectResult interpret(const char *source) {
   vm.chunk = &chunk;
   vm.ip = vm.chunk->code;
   InterprectResult result = run();
+  vm.chunk = NULL; /* avoid double-free in freeVM(); chunk is local */
   freeChunk(&chunk);
   return result;
 }
