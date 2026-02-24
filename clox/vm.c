@@ -54,6 +54,22 @@ static bool isFalsey(Value value) {
   return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
 }
 
+static bool valueEquals(Value a, Value b) {
+  if (a.type != b.type) {
+    return false;
+  }
+  switch (a.type) {
+  case VAL_BOOL:
+    return AS_BOOL(a) == AS_BOOL(b);
+  case VAL_NIL:
+    return true;
+  case VAL_NUMBER:
+    return AS_NUMBER(a) == AS_NUMBER(b);
+  default:
+    return false;
+  }
+}
+
 static InterprectResult run() {
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
@@ -98,6 +114,18 @@ static InterprectResult run() {
       break;
     case OP_FALSE:
       push(BOOL_VAL(false));
+      break;
+    case OP_EQUAL: {
+      Value b = pop();
+      Value a = pop();
+      push(BOOL_VAL(valueEquals(a, b)));
+      break;
+    }
+    case OP_GREATER:
+      BINARY_OP(BOOL_VAL, >);
+      break;
+    case OP_LESS:
+      BINARY_OP(BOOL_VAL, <);
       break;
     case OP_ADD:
       BINARY_OP(NUMBER_VAL, +);
