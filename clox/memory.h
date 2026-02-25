@@ -13,12 +13,16 @@
 #define FREE_ARRAY(type, pointer, oldCount)                                    \
   reallocate(pointer, sizeof(type) * (oldCount), 0)
 
+#define ALLOCATE(type, count)                                                  \
+  \ (type *)reallocate(NULL, 0, sizeof(type) * (count))
+
 /**
  * Reallocate based on pointer and new size.
- * @param pointer 
+ * @param pointer
  * @param (int) oldSize in size_t
  * @param newSize in size_t
  */
 void *reallocate(void *pointer, size_t oldSize, size_t newSize);
+void freeObjects();
 
 #endif // !clox_memory_h

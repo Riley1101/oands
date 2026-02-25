@@ -12,6 +12,7 @@ static void resetStack() { vm.stackTop = vm.stack; }
 
 void initVM() {
   resetStack();
+  vm.objects = NULL;
   vm.chunk = NULL;
   vm.ip = NULL;
 }
@@ -52,22 +53,6 @@ static void runtimeError(const char *format, ...) {
 
 static bool isFalsey(Value value) {
   return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
-}
-
-static bool valueEquals(Value a, Value b) {
-  if (a.type != b.type) {
-    return false;
-  }
-  switch (a.type) {
-  case VAL_BOOL:
-    return AS_BOOL(a) == AS_BOOL(b);
-  case VAL_NIL:
-    return true;
-  case VAL_NUMBER:
-    return AS_NUMBER(a) == AS_NUMBER(b);
-  default:
-    return false;
-  }
 }
 
 static InterprectResult run() {

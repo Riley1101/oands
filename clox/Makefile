@@ -17,9 +17,9 @@ else
 endif
 
 TARGET = main
-SRCS = main.c chunk.c compiler.c memory.c debug.c scanner.c value.c vm.c
+SRCS = main.c chunk.c compiler.c memory.c debug.c scanner.c value.c vm.c object.c
 OBJS = $(SRCS:.c=.o)
-HDRS = chunk.h common.h compiler.h memory.h debug.h scanner.h value.h vm.h
+HDRS = chunk.h common.h compiler.h memory.h debug.h scanner.h value.h vm.h object.h
 
 FILE ?= $(file)
 

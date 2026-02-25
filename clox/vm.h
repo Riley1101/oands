@@ -18,6 +18,7 @@ typedef struct {
 
   Value stack[STACK_MAX];
   Value *stackTop;
+  Obj *objects;
 } VM;
 
 typedef enum {
@@ -26,12 +27,13 @@ typedef enum {
   INTERPRET_RUNTIME_ERROR,
 } InterprectResult;
 
+extern VM vm;
+
 void initVM();
 void freeVM();
 
-InterprectResult interpret(const char* source);
+InterprectResult interpret(const char *source);
 void push(Value value);
 Value pop();
-
 
 #endif // !clox_vm_h
