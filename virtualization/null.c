@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 void forget_free() {
+  malloc(sizeof(int[69]));
   printf("In forget free.\n");
 
   int *arr = malloc(sizeof(int) * 2);
