@@ -1,20 +1,12 @@
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-/* Check if the compiler thinks you are targeting the wrong operating system. */
-#if defined(__linux__)
-#error                                                                         \
-    "You are not using a cross-compiler, you will most certainly run into trouble"
-#endif
+#define VGA_WIDTH 45
+#define VGA_HEIGHT 45
 
-/* This tutorial will only work for the 32-bit ix86 targets. */
-#if !defined(__i386__)
-#error "This tutorial needs to be compiled with a ix86-elf compiler"
-#endif
-
-/**
- * Hardware text mode color constatns
- */
 enum vga_color {
   VGA_COLOR_BLACK = 0,
   VGA_COLOR_BLUE = 1,
@@ -48,22 +40,11 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color) {
   return (uint16_t)uc | (uint16_t)color << 8;
 }
 
-size_t strlen(const char *str) {
-  size_t len = 0;
-  while (str[len]) {
-    len++;
-  }
-  return len;
-}
-
-#define VGA_WIDTH 80
-#define VGA_HEIGHT 25
-#define VGA_MEMORY 0xB8000
-
 size_t terminal_row;
 size_t terminal_column;
 uint8_t terminal_color;
-uint16_t *terminal_buffer = (uint16_t *)VGA_MEMORY;
+uint16_t terminal_buffer_memory[VGA_WIDTH * VGA_HEIGHT];
+uint16_t *terminal_buffer = terminal_buffer_memory;
 
 void terminal_initialize(void) {
   terminal_row = 0;
@@ -73,32 +54,39 @@ void terminal_initialize(void) {
   for (size_t y = 0; y < VGA_HEIGHT; y++) {
     for (size_t x = 0; x < VGA_WIDTH; x++) {
       const size_t index = y * VGA_WIDTH + x;
-      terminal_buffer[index] = vga_entry(' ', terminal_color);
+      terminal_buffer[index] = vga_entry('_', terminal_color);
     }
   }
 }
 
-void terminal_setcolor(uint8_t color) { terminal_color = color; }
-
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
   const size_t index = y * VGA_WIDTH + x;
-  if (c == '\n') {
-    terminal_column = 0;
-    if (++terminal_row == VGA_HEIGHT) {
-      terminal_row = 0;
-    }
-    return;
-  }
   terminal_buffer[index] = vga_entry(c, color);
 }
 
 void terminal_putchar(char c) {
+  if (c == '\n') {
+    terminal_column = 0;
+    terminal_row++;
+  }
   terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+
   if (++terminal_column == VGA_WIDTH) {
     terminal_column = 0;
     if (++terminal_row == VGA_HEIGHT) {
       terminal_row = 0;
     }
+  }
+}
+
+void render_simulated_vga(void) {
+  for (size_t y = 0; y < VGA_HEIGHT; y++) {
+    for (size_t x = 0; x < VGA_WIDTH; x++) {
+      const size_t index = y * VGA_WIDTH + x;
+      char c = terminal_buffer[index] & 0xFF;
+      putchar(c);
+    }
+    putchar('\n');
   }
 }
 
@@ -112,7 +100,9 @@ void terminal_writestring(const char *data) {
   terminal_write(data, strlen(data));
 }
 
-void kernel_main(void) {
+int main(int argc, char *argv[]) {
   terminal_initialize();
-  terminal_writestring("HELLO, kernel world!\n");
+  terminal_writestring("HELLO \nWORLD! \n I \n Love \n It");
+  render_simulated_vga();
+  return EXIT_SUCCESS;
 }
