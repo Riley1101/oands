@@ -68,7 +68,7 @@ uint16_t *terminal_buffer = (uint16_t *)VGA_MEMORY;
 void terminal_initialize(void) {
   terminal_row = 0;
   terminal_column = 0;
-  terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
+  terminal_color = vga_entry_color(VGA_COLOR_LIGHT_MANGENTA, VGA_COLOR_BLACK);
 
   for (size_t y = 0; y < VGA_HEIGHT; y++) {
     for (size_t x = 0; x < VGA_WIDTH; x++) {
