@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// This is the last call you will get from me.
 __attribute__((__noreturn__))
 void abort(void) {
 #if defined(__is_libk)
