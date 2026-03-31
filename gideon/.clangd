@@ -1,0 +1,5 @@
+CompileFlags:
+  # This acts exactly like the --query-driver flag
+  QueryDriver: [ "/usr/bin/x86_64-elf-gcc" ]
+  # You can also add specific flags if the JSON missed them
+  Add: [ "-ffreestanding", "-nostdinc" ]
